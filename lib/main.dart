@@ -1,20 +1,24 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:fit_track/authScreens/LoginScreen.dart';
+import 'package:fit_track/authScreens/RegisterScreen.dart';
+import 'package:fit_track/firebase_options.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MainApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(MyApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp(
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => LoginScreen(),
+        '/register': (context) => RegisterScreen(),
+      },
     );
   }
 }
