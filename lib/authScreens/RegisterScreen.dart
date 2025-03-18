@@ -1,3 +1,5 @@
+import 'package:fit_track/model/User.dart';
+import 'package:fit_track/service/AuthService.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -13,6 +15,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _lastNameController = TextEditingController();
   final _heightController = TextEditingController();
   final _weightController = TextEditingController();
+  final AuthService _authService = AuthService();
+
+  Future<void> _register() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        User newUser = User(
+          email: _emailController.text,
+          password: _passwordController.text,
+          firstName: _firstNameController.text,
+          lastName: _lastNameController.text,
+          height: double.parse(_heightController.text),
+          weight: double.parse(_weightController.text),
+        );
+
+        await _authService.register(newUser);
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Successful registration !')));
+        Navigator.pop(context);
+      } catch (e) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('error: $e')));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +73,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   TextFormField(
                     controller: _firstNameController,
                     decoration: InputDecoration(
-                      labelText: 'Prénom',
+                      labelText: 'FirstName',
                       prefixIcon: Icon(Icons.person, color: Colors.white),
                       filled: true,
                       fillColor: Colors.white.withOpacity(0.3),
@@ -59,14 +87,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     validator:
                         (value) =>
                             value!.isEmpty
-                                ? 'Veuillez entrer votre prénom'
+                                ? 'Please enter your first name'
                                 : null,
                   ),
                   SizedBox(height: 20),
                   TextFormField(
                     controller: _lastNameController,
                     decoration: InputDecoration(
-                      labelText: 'Nom',
+                      labelText: 'LastName',
                       prefixIcon: Icon(Icons.person, color: Colors.white),
                       filled: true,
                       fillColor: Colors.white.withOpacity(0.3),
@@ -79,7 +107,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     style: TextStyle(color: Colors.white),
                     validator:
                         (value) =>
-                            value!.isEmpty ? 'Veuillez entrer votre nom' : null,
+                            value!.isEmpty
+                                ? 'Please enter your last name'
+                                : null,
                   ),
                   SizedBox(height: 20),
                   TextFormField(
@@ -98,13 +128,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     style: TextStyle(color: Colors.white),
                     validator:
                         (value) =>
-                            value!.isEmpty ? 'Veuillez entrer un email' : null,
+                            value!.isEmpty
+                                ? 'Please enter a valid email'
+                                : null,
                   ),
                   SizedBox(height: 20),
                   TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
-                      labelText: 'Mot de passe',
+                      labelText: 'Password',
                       prefixIcon: Icon(Icons.lock, color: Colors.white),
                       filled: true,
                       fillColor: Colors.white.withOpacity(0.3),
@@ -119,14 +151,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     validator:
                         (value) =>
                             value!.length < 6
-                                ? 'Le mot de passe doit contenir au moins 6 caractères'
+                                ? 'Password must contain at least 6 characters'
                                 : null,
                   ),
                   SizedBox(height: 20),
                   TextFormField(
                     controller: _heightController,
                     decoration: InputDecoration(
-                      labelText: 'Taille (cm)',
+                      labelText: 'height (cm)',
                       prefixIcon: Icon(Icons.height, color: Colors.white),
                       filled: true,
                       fillColor: Colors.white.withOpacity(0.3),
@@ -140,15 +172,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     keyboardType: TextInputType.number,
                     validator:
                         (value) =>
-                            value!.isEmpty
-                                ? 'Veuillez entrer votre taille'
-                                : null,
+                            value!.isEmpty ? 'Please enter your size' : null,
                   ),
                   SizedBox(height: 20),
                   TextFormField(
                     controller: _weightController,
                     decoration: InputDecoration(
-                      labelText: 'Poids (kg)',
+                      labelText: 'Weight (kg)',
                       prefixIcon: Icon(
                         Icons.fitness_center,
                         color: Colors.white,
@@ -165,14 +195,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     keyboardType: TextInputType.number,
                     validator:
                         (value) =>
-                            value!.isEmpty
-                                ? 'Veuillez entrer votre poids'
-                                : null,
+                            value!.isEmpty ? 'Please enter your weight' : null,
                   ),
                   SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
+                        _register();
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -186,7 +215,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     child: Text(
-                      'S\'inscrire',
+                      'Register',
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),
@@ -196,7 +225,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Navigator.pushNamed(context, '/login');
                     },
                     child: Text(
-                      'Déjà un compte ? Connectez-vous',
+                      'Already have an account? Log in',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),

@@ -1,3 +1,4 @@
+import 'package:fit_track/service/AuthService.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -9,6 +10,27 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
+
+  Future<void> _login() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        await _authService.login(
+          context,
+          _emailController.text,
+          _passwordController.text,
+        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Connexion succeed !')));
+        Navigator.pushReplacementNamed(context, '/MainHomeScreen');
+      } catch (e) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('error: $e')));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,13 +75,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: TextStyle(color: Colors.white),
                   validator:
                       (value) =>
-                          value!.isEmpty ? 'Veuillez entrer un email' : null,
+                          value!.isEmpty ? 'Please enter a valid email' : null,
                 ),
                 SizedBox(height: 20),
                 TextFormField(
                   controller: _passwordController,
                   decoration: InputDecoration(
-                    labelText: 'Mot de passe',
+                    labelText: 'password',
                     prefixIcon: Icon(Icons.lock, color: Colors.white),
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.3),
@@ -74,13 +96,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   validator:
                       (value) =>
                           value!.length < 6
-                              ? 'Le mot de passe doit contenir au moins 6 caractères'
+                              ? 'The password must contain at least 6 characters'
                               : null,
                 ),
                 SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {}
+                    if (_formKey.currentState!.validate()) {
+                      _login();
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
@@ -90,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   child: Text(
-                    'Se connecter',
+                    'Connect',
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
@@ -100,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.pushNamed(context, '/register');
                   },
                   child: Text(
-                    'Pas de compte ? Inscrivez-vous',
+                    'No account? Register',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
