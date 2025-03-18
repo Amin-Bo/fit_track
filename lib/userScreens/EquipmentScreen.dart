@@ -1,5 +1,6 @@
 import 'package:fit_track/provider/FilterProvider.dart';
 import 'package:fit_track/service/UserService.dart';
+import 'package:fit_track/userScreens/EquipmentExercisesScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,7 +12,7 @@ class EquipmentList extends StatelessWidget {
     final filterProvider = Provider.of<FilterProvider>(context);
 
     return FutureBuilder<List<String>>(
-      future: userService.fetchBodyPartsList(),
+      future: userService.fetchEquipmentsList(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -32,18 +33,25 @@ class EquipmentList extends StatelessWidget {
             itemCount: equipmentList.length,
             itemBuilder: (context, index) {
               final equipment = equipmentList[index];
-              final isSelected = filterProvider.selectedEquipment.contains(
-                equipment,
-              );
+              filterProvider.selectedEquipment.contains(equipment);
 
               return _EquipmentCard(
                 equipment: equipment,
-                onTap: () => print('Selected: $equipment'),
+                onTap: () => _navigateToEquipmentExercises(context, equipment),
               );
             },
           );
         }
       },
+    );
+  }
+
+  void _navigateToEquipmentExercises(BuildContext context, String equipment) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EquipmentExercisesScreen(equipment: equipment),
+      ),
     );
   }
 }

@@ -1,6 +1,8 @@
 // filepath: c:\Users\aminb\Desktop\FitTrack\fit_track\lib\service\UserService.dart
 import 'dart:convert';
+import 'package:fit_track/model/Exercice.dart';
 import 'package:fit_track/model/ExerciseCategory.dart';
+import 'package:fit_track/provider/FilterProvider.dart';
 import 'package:http/http.dart' as http;
 
 class UserService {
@@ -32,11 +34,35 @@ class UserService {
     );
 
     if (response.statusCode == 200) {
-      List<String> data = json.decode(response.body);
+      List<dynamic> data = json.decode(response.body);
       print(data);
       return data.cast<String>();
     } else {
       throw Exception('Failed to load exercise categories');
+    }
+  }
+
+  Future<List<Exercise>> getExercisesByEquipment({
+    required String equipment,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$apiUrl/equipment/$equipment?limit=10&offset=0'),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      // Convert to Exercise model
+      List<Exercise> exercises =
+          data
+              .map(
+                (exercise) =>
+                    Exercise.fromFirestore(exercise as Map<String, dynamic>),
+              )
+              .toList();
+      return exercises;
+    } else {
+      throw Exception('Failed to load exercises by equipment');
     }
   }
 }

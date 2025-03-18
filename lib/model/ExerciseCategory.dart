@@ -14,9 +14,12 @@ class ExerciseCategory {
             category['exercises']
                 .map<Exercise>(
                   (exercise) => Exercise(
+                    id: exercise['id'],
                     name: exercise['name'],
                     equipment: exercise['equipment'],
-                    imageUrl: exercise['imageUrl'],
+                    gifUrl: exercise['gifUrl'],
+                    bodyPart: exercise['bodyPart'],
+                    target: exercise['target'],
                   ),
                 )
                 .toList(),
