@@ -158,7 +158,6 @@ class _SearchModeCard extends StatelessWidget {
   }
 }
 
-// Provider
 enum SearchMode { bodyPart, equipment }
 
 class ExerciseSearchProvider with ChangeNotifier {

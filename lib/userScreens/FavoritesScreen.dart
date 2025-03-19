@@ -12,7 +12,6 @@ class FavoritesScreen extends StatelessWidget {
     final favoritesFuture = favoritesProvider.loadFavorites();
 
     return Scaffold(
-      appBar: AppBar(title: Text('My Favorites'), centerTitle: true),
       body: FutureBuilder<List<Exercise>>(
         future: favoritesFuture,
         builder: (context, snapshot) {
