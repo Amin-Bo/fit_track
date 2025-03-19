@@ -50,7 +50,9 @@ class EquipmentList extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EquipmentExercisesScreen(equipment: equipment),
+        builder:
+            (context) =>
+                EquipmentExercisesScreen(equipment: equipment, bodyPart: ""),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:fit_track/service/UserService.dart';
+import 'package:fit_track/userScreens/EquipmentExercisesScreen.dart';
 import 'package:flutter/material.dart';
 
 class BodyPartGrid extends StatelessWidget {
@@ -30,7 +31,11 @@ class BodyPartGrid extends StatelessWidget {
             itemBuilder: (context, index) {
               return _BodyPartCard(
                 bodyPart: bodyParts[index],
-                onTap: () => _handleBodyPartSelection(bodyParts[index]),
+                onTap:
+                    () => _navigateToEquipmentExercises(
+                      context,
+                      bodyParts[index],
+                    ),
               );
             },
           );
@@ -39,9 +44,15 @@ class BodyPartGrid extends StatelessWidget {
     );
   }
 
-  void _handleBodyPartSelection(String bodyPart) {
-    // Navigation vers les exercices de la partie du corps sélectionnée
-    print('Selected: $bodyPart');
+  void _navigateToEquipmentExercises(BuildContext context, String equipment) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (context) =>
+                EquipmentExercisesScreen(bodyPart: equipment, equipment: ""),
+      ),
+    );
   }
 }
 

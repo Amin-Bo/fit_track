@@ -20,7 +20,6 @@ class UserService {
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
-      print(data);
       return data.cast<String>();
     } else {
       throw Exception('Failed to load exercise categories');
@@ -35,7 +34,6 @@ class UserService {
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
-      print(data);
       return data.cast<String>();
     } else {
       throw Exception('Failed to load exercise categories');
@@ -46,18 +44,43 @@ class UserService {
     required String equipment,
   }) async {
     final response = await http.get(
-      Uri.parse('$apiUrl/equipment/$equipment?limit=10&offset=0'),
+      Uri.parse('$apiUrl/equipment/$equipment?limit=20&offset=0'),
+      headers: headers,
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      List<Exercise> exercises =
+          data
+              .map(
+                (exercise) => Exercise.fromFirestore(
+                  exercise as Map<String, dynamic>,
+                  "",
+                ),
+              )
+              .toList();
+      return exercises;
+    } else {
+      throw Exception('Failed to load exercises by equipment');
+    }
+  }
+
+  Future<List<Exercise>> getExercisesByBodyPart({
+    required String bodyPart,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$apiUrl/bodyPart/$bodyPart?limit=20&offset=0'),
       headers: headers,
     );
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
-      // Convert to Exercise model
       List<Exercise> exercises =
           data
               .map(
-                (exercise) =>
-                    Exercise.fromFirestore(exercise as Map<String, dynamic>),
+                (exercise) => Exercise.fromFirestore(
+                  exercise as Map<String, dynamic>,
+                  "",
+                ),
               )
               .toList();
       return exercises;

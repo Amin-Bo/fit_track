@@ -1,4 +1,5 @@
 import 'package:fit_track/userScreens/BodyPartScreen.dart';
+import 'package:fit_track/userScreens/FavoritesScreen.dart';
 import 'package:fit_track/userScreens/HomeScreen.dart';
 import 'package:fit_track/userScreens/UserProfile.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
 
   final List<Widget> widgetOptions = [
     ExerciseSearchSelector(),
-    UserProfile(),
+    FavoritesScreen(),
     UserProfile(),
   ];
 
@@ -36,11 +37,11 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
         unselectedItemColor: Colors.blueGrey,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
           BottomNavigationBarItem(
             icon: Icon(Icons.fitness_center),
             label: 'Favorites',
           ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,

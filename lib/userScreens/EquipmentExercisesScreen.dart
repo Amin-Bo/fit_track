@@ -1,13 +1,18 @@
 import 'package:fit_track/model/Exercice.dart';
 import 'package:fit_track/provider/FilterProvider.dart';
 import 'package:fit_track/service/UserService.dart';
+import 'package:fit_track/userScreens/ExerciseDetailScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class EquipmentExercisesScreen extends StatelessWidget {
   final String equipment;
+  final String bodyPart;
 
-  const EquipmentExercisesScreen({required this.equipment});
+  const EquipmentExercisesScreen({
+    required this.equipment,
+    required this.bodyPart,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +22,10 @@ class EquipmentExercisesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Exercices avec $equipment')),
       body: FutureBuilder<List<Exercise>>(
-        future: userService.getExercisesByEquipment(equipment: equipment),
+        future:
+            equipment != ""
+                ? userService.getExercisesByEquipment(equipment: equipment)
+                : userService.getExercisesByBodyPart(bodyPart: bodyPart),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -65,7 +73,12 @@ class _ExerciseListItem extends StatelessWidget {
         subtitle: Text(exercise.bodyPart),
         trailing: Icon(Icons.arrow_forward_ios),
         onTap: () {
-          // Navigation vers le détail de l'exercice
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ExerciseDetailScreen(exercise: exercise),
+            ),
+          );
         },
       ),
     );

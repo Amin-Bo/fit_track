@@ -20,9 +20,9 @@ class Exercise {
     this.instructions = const [],
   });
 
-  factory Exercise.fromFirestore(Map<String, dynamic> data) {
+  factory Exercise.fromFirestore(Map<String, dynamic> data, String id) {
     return Exercise(
-      id: data['id'] ?? '',
+      id: id == "" ? data['id'] : id ?? '',
       name: data['name'] ?? '',
       bodyPart: data['bodyPart'] ?? '',
       equipment: data['equipment'] ?? '',
@@ -31,5 +31,18 @@ class Exercise {
       secondaryMuscles: List<String>.from(data['secondaryMuscles'] ?? []),
       instructions: List<String>.from(data['instructions'] ?? []),
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'bodyPart': bodyPart,
+      'equipment': equipment,
+      'gifUrl': gifUrl,
+      'target': target,
+      'secondaryMuscles': secondaryMuscles,
+      'instructions': instructions,
+    };
   }
 }
